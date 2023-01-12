@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, render_template
 import pickle
 
 app = Flask(__name__)
-model = pickle.load(open('model.pkl', 'rb'))
+model = pickle.load(open('model_fin.pkl', 'rb'))
 
 @app.route('/')
 def home():
@@ -50,13 +50,13 @@ def predict():
     
     features = [float(x) for x in features]
     final_features = [np.array(features)]
-    prediction = model.predict(final_features)
-
+    prediction = model[0].predict(final_features)
+    prediction_2 = model[1].predict(final_features)
     output = round(prediction[0])
     if(output==0.0):
         output="Person is not placed"
     else:
-        output="Person is Placed"
+        output="Person is Placed"+" with salary "+ str(prediction_2[0])
 #     output =len(features)
 
     return render_template('index.html', prediction_text=output)
